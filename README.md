@@ -1,16 +1,13 @@
-# backup
+# Flutter developer testing project
+in flutter it is common to have data be offline first then at somepoint you want to back the data to the cloud,
+In this project we want you to show us how you can keep the local data backed-up online and ensure more than one user will have same copy of the data
+# Use the following tech
+- https://pub.dev/packages/isar (for local data)
+- http://pocketbase.io/ (for data backup )
+- https://pub.dev/packages/stock ( in case you need to merge two data source
+The demo should be easy only two model to proove the concept is enough, ensure good coding practice and having unit testing and integration testing is added bonus
+Keep the demo easy but show the concept in a more efficient way, use https://www.vidyard.com/ to record the demo
+- Send PR detailing the work done and with clear documentation, after this next interview will be scheduled.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Bonus point for a candidate
+- It will be nice if this is close to synchronization with multiple users maybe 2 users able to use one data point e.g when you edit google doc both changes shows
