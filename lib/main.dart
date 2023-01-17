@@ -1,14 +1,17 @@
 import 'package:backup/constants/routes.dart';
 import 'package:backup/screens/home_screen.dart';
-import 'package:backup/services/isar_service.dart';
+import 'package:backup/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await dotenv.load(fileName: "assets/.env");
+  ConnectivityService();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   // This widget is the root of your application.
   @override

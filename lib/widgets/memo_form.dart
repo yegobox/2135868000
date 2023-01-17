@@ -20,6 +20,7 @@ class MemoForm extends StatefulWidget {
 class _MemoFormState extends State<MemoForm> {
   final _formKey = GlobalKey<FormState>();
   int? memoId;
+  Memo? memo;
   String _title = "";
   final QuillController _controller = QuillController.basic();
   late Function(Memo) submit;
@@ -41,9 +42,9 @@ class _MemoFormState extends State<MemoForm> {
       stream: memoId == null ? null : isar_service.getMemo(memoId!),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final memo = snapshot.data as Memo;
-          _title = memo.title;
-          _controller.document = Document.fromJson(jsonDecode(memo.memo));
+          memo = snapshot.data as Memo;
+          _title = memo!.title;
+          _controller.document = Document.fromJson(jsonDecode(memo!.memo));
         }
         return Form(
           key: _formKey,
@@ -114,8 +115,13 @@ class _MemoFormState extends State<MemoForm> {
     String memoText = jsonEncode(_controller.document.toDelta().toJson());
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      Memo memo = Memo(title: _title, memo: memoText);
-      this.submit(memo);
+      if (memoId == null) {
+        memo = Memo(title: _title, memo: memoText);
+      } else {
+        memo!.title = _title;
+        memo!.memo = memoText;
+      }
+      submit(memo!);
     }
   }
 }

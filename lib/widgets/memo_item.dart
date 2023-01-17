@@ -1,3 +1,4 @@
+import 'package:backup/helpers/timestamp_helper.dart';
 import 'package:backup/models/memo.dart';
 import 'package:backup/screens/edit_memo_screen.dart';
 import 'package:backup/screens/view_memo_screen.dart';
@@ -35,7 +36,7 @@ class MemoItem extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             onTap: () => viewMemo(context, memo),
-            leading: Text(memo.id.toString()),
+            leading: Text(memo.uid.toString()),
             title: Text(
               memo.title,
               style: TextStyle(fontWeight: FontWeight.w600),
@@ -45,13 +46,13 @@ class MemoItem extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () => editMemo(context, memo.id),
+                      onPressed: () => editMemo(context, memo.uid),
                       icon: Icon(Icons.edit),
                       color: Color.fromARGB(255, 248, 161, 31),
                       iconSize: 20,
                     ),
                     IconButton(
-                      onPressed: () => deleteMemo(memo.id),
+                      onPressed: () => deleteMemo(memo.uid),
                       icon: Icon(Icons.delete),
                       iconSize: 20,
                       color: Color.fromARGB(255, 231, 66, 55),
@@ -59,7 +60,7 @@ class MemoItem extends StatelessWidget {
                   ],
                 )),
             horizontalTitleGap: 2,
-            subtitle: Text(memo.updatedAt.timeZoneName),
+            subtitle: Text(getTimeAgo(memo.updated.millisecondsSinceEpoch)),
           ),
         ),
       ),

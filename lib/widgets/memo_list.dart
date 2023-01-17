@@ -9,11 +9,13 @@ class MemoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: memos.length,
-      itemBuilder: (context, index) {
-        return MemoItem(memo: memos[index]);
-      },
-    );
+    return memos.isNotEmpty
+        ? ListView.builder(
+            itemCount: memos.length,
+            itemBuilder: (context, index) {
+              return MemoItem(memo: memos[index]);
+            },
+          )
+        : const Text("No memos Saved");
   }
 }

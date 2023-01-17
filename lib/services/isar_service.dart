@@ -1,4 +1,6 @@
 import 'package:backup/models/memo.dart';
+import 'package:backup/services/connectivity_service.dart';
+import 'package:backup/services/sync_service.dart';
 import 'package:isar/isar.dart';
 
 class IsarService {
@@ -18,7 +20,16 @@ class IsarService {
 
   Stream<List<Memo>> getAllMemos() async* {
     final isar = await db;
-    yield* isar.memos.where().watch(fireImmediately: true);
+    yield* isar.memos
+        .where()
+        .filter()
+        .statusEqualTo(true)
+        .watch(fireImmediately: true);
+  }
+
+  Future<List<Memo>> getMemos() async {
+    final isar = await db;
+    return isar.memos.where().findAll();
   }
 
   Stream<void> getMemo(int id) async* {
@@ -31,8 +42,22 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.memos.putSync(newMemo));
   }
 
-  Future<bool> deleteMemo(id) async {
+  Future<void> saveMemos(List<Memo> newMemos) async {
     final isar = await db;
-    return isar.writeTxnSync<bool>(() => isar.memos.deleteSync(id));
+    isar.writeTxnSync<List<int>>(() => isar.memos.putAllSync(newMemos));
+  }
+
+  Future<void> deleteMemo(id) async {
+    final isar = await db;
+    final memo = await isar.memos.get(id);
+    memo!.status = false;
+    memo.updated = DateTime.now();
+    isar.writeTxnSync(() => isar.memos.putSync(memo));
+  }
+
+  Future<void> updateMemo(Memo memo) async {
+    final isar = await db;
+    memo.updated = DateTime.now();
+    isar.writeTxnSync(() => isar.memos.putSync(memo));
   }
 }
