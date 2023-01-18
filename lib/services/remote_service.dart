@@ -13,10 +13,10 @@ class RemoteService {
   }
 
   Future<List<RecordModel>> getMemos() {
-    return pb.collection("memos").getFullList(filter: 'status = true');
+    return pb.collection("memos").getFullList();
   }
 
-  void createMemo(Memo newMemo) {
+  Future<void> createMemo(Memo newMemo) async {
     pb.collection("memos").create(body: newMemo.toJson());
   }
 

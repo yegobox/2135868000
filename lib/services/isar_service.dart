@@ -1,10 +1,12 @@
 import 'package:backup/models/memo.dart';
 import 'package:backup/services/connectivity_service.dart';
+import 'package:backup/services/remote_service.dart';
 import 'package:backup/services/sync_service.dart';
 import 'package:isar/isar.dart';
 
 class IsarService {
   late Future<Isar> db;
+  final remoteService = RemoteService();
 
   IsarService() {
     db = openDb();
@@ -32,7 +34,7 @@ class IsarService {
     return isar.memos.where().findAll();
   }
 
-  Stream<void> getMemo(int id) async* {
+  Stream<Memo?> getMemo(int id) async* {
     final isar = await db;
     yield* isar.memos.watchObject(id, fireImmediately: true);
   }
@@ -59,5 +61,12 @@ class IsarService {
     final isar = await db;
     memo.updated = DateTime.now();
     isar.writeTxnSync(() => isar.memos.putSync(memo));
+    if (ConnectivityService.isConnected) {
+      try {
+        remoteService.updateMemo(memo);
+      } catch (e) {
+        return;
+      }
+    }
   }
 }

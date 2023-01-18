@@ -17,30 +17,32 @@ class IsarSourceOfTruth implements SourceOfTruth<String, List<Memo>> {
 
   @override
   Future<void> write(String key, List<Memo>? memos) async {
-    List<Memo> localMemos = await isarService.getMemos();
-    var localMemosSet = HashSet<Memo>.from(localMemos);
-    var remoteMemosSet = HashSet<Memo>.from(memos!);
-    var difference = localMemosSet.difference(remoteMemosSet);
-    if (difference.isNotEmpty) {
-      difference.forEach((Memo memo) {
-        if (memo.id!.isEmpty) remoteService.createMemo(memo);
-      });
-    }
-    memos = memos.map((Memo memo) {
-      var existingMemo = localMemos.firstWhere((e) => e.uid == memo.uid,
-          orElse: () => Memo(title: "Notfound", memo: "Notfound"));
-      if (existingMemo.title != "Notfound") {
-        if (existingMemo.updated.microsecondsSinceEpoch >
-            memo.updated.millisecondsSinceEpoch) {
-          print(memo.toJson());
-          print(existingMemo.toJson());
-          remoteService.updateMemo(existingMemo);
-          return existingMemo;
-        }
+    try {
+      List<Memo> localMemos = await isarService.getMemos();
+      HashSet<Memo> localMemosSet = HashSet<Memo>.from(localMemos);
+      HashSet<Memo> remoteMemosSet = HashSet<Memo>.from(memos!);
+      Set<Memo> difference = localMemosSet.difference(remoteMemosSet);
+      if (difference.isNotEmpty) {
+        difference.forEach((Memo memo) async {
+          if (localMemosSet.contains(memo) && memo.id == null) {
+            await remoteService.createMemo(memo);
+          }
+        });
       }
-      return memo;
-    }).toList();
-    // return isarService.saveMemos(memos);
+      memos = memos.map((Memo memo) {
+        var existingMemo = localMemos.firstWhere((e) => e.uid == memo.uid,
+            orElse: () => Memo(title: "Notfound", memo: "Notfound"));
+        if (existingMemo.title != "Notfound") {
+          if (existingMemo.updated.millisecondsSinceEpoch >
+              memo.updated.millisecondsSinceEpoch) {
+            remoteService.updateMemo(existingMemo);
+            return existingMemo;
+          }
+        }
+        return memo;
+      }).toList();
+      return isarService.saveMemos(memos);
+    } catch (e) {}
   }
 
   @override
@@ -57,11 +59,15 @@ class IsarSourceOfTruth implements SourceOfTruth<String, List<Memo>> {
 }
 
 final pocketBaseFetcher = Fetcher.ofFuture<String, List<Memo>>((key) async {
-  final memos = await remoteService.getMemos();
-  final memosJson = memos.map((RecordModel memo) {
-    return Memo.fromRecord(memo);
-  }).toList();
-  return memosJson;
+  try {
+    final memos = await remoteService.getMemos();
+    final memosJson = memos.map((RecordModel memo) {
+      return Memo.fromRecord(memo);
+    }).toList();
+    return memosJson;
+  } catch (e) {
+    return [];
+  }
 });
 
 final stock =

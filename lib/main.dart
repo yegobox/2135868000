@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             colorScheme: const ColorScheme.dark(),
             primarySwatch: Colors.deepPurple,
-            appBarTheme: AppBarTheme(color: Colors.blue),
-            scaffoldBackgroundColor: Color.fromARGB(255, 6, 6, 31)),
+            appBarTheme: const AppBarTheme(color: Colors.blue),
+            scaffoldBackgroundColor: const Color.fromARGB(255, 6, 6, 31)),
         debugShowCheckedModeBanner: false,
         home: Home(title: 'YegoMemo'),
         routes: routes);

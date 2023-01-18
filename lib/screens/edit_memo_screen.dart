@@ -1,5 +1,6 @@
 import 'package:backup/services/isar_service.dart';
 import 'package:backup/widgets/memo_form.dart';
+import 'package:backup/widgets/toaster.dart';
 import 'package:flutter/material.dart';
 
 class EditMemo extends StatelessWidget {
@@ -10,6 +11,7 @@ class EditMemo extends StatelessWidget {
 
   void updateMemo(context, memo) async {
     await isarService.updateMemo(memo);
+    Toaster(context).showToast(ToasterType.success, "${memo.title} Updated");
     Navigator.pop(context);
   }
 

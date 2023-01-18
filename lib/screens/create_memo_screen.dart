@@ -10,15 +10,16 @@ class CreateMemo extends StatelessWidget {
 
   static const route_name = "/create_memo";
 
+  void _createMemo(context, Memo memo) {
+    try {
+      service.saveMemo(memo);
+      Toaster(context).showToast(ToasterType.success, "${memo.title} Saved");
+      Navigator.pop(context);
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
-    void createMemo(Memo memo) {
-      try {
-        service.saveMemo(memo);
-        Navigator.pop(context);
-      } catch (e) {}
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Write a memo"),
@@ -28,7 +29,7 @@ class CreateMemo extends StatelessWidget {
           width: double.infinity,
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child: MemoForm(submit: createMemo),
+            child: MemoForm(submit: (memo) => _createMemo(context, memo)),
           ),
         ),
       ),

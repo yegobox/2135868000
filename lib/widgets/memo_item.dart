@@ -60,7 +60,8 @@ class MemoItem extends StatelessWidget {
                   ],
                 )),
             horizontalTitleGap: 2,
-            subtitle: Text(getTimeAgo(memo.updated.millisecondsSinceEpoch)),
+            subtitle: Text(
+                "Upadated ${getTimeAgo(memo.updated.millisecondsSinceEpoch)} ago"),
           ),
         ),
       ),
