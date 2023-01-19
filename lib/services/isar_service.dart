@@ -16,7 +16,7 @@ class IsarService {
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open([MemoSchema], inspector: true);
     }
-
+    print(Isar.getInstance()!.directory);
     return Future.value(Isar.getInstance());
   }
 
@@ -42,10 +42,18 @@ class IsarService {
   Future<void> saveMemo(Memo newMemo) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.memos.putSync(newMemo));
+    if (ConnectivityService.isConnected) {
+      try {
+        remoteService.createMemo(newMemo);
+      } catch (e) {
+        return;
+      }
+    }
   }
 
   Future<void> saveMemos(List<Memo> newMemos) async {
     final isar = await db;
+    print(newMemos);
     isar.writeTxnSync<List<int>>(() => isar.memos.putAllSync(newMemos));
   }
 

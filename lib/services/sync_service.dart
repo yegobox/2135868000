@@ -42,7 +42,9 @@ class IsarSourceOfTruth implements SourceOfTruth<String, List<Memo>> {
         return memo;
       }).toList();
       return isarService.saveMemos(memos);
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

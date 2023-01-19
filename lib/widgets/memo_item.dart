@@ -6,10 +6,11 @@ import 'package:backup/services/isar_service.dart';
 import 'package:flutter/material.dart';
 
 class MemoItem extends StatelessWidget {
+  final int index;
   final Memo memo;
   final service = IsarService();
 
-  MemoItem({required this.memo});
+  MemoItem({required this.index, required this.memo});
 
   void viewMemo(context, Memo memo) {
     Navigator.pushNamed(context, ViewMemo.route_name, arguments: memo);
@@ -36,7 +37,7 @@ class MemoItem extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             onTap: () => viewMemo(context, memo),
-            leading: Text(memo.uid.toString()),
+            leading: Text((index + 1).toString()),
             title: Text(
               memo.title,
               style: TextStyle(fontWeight: FontWeight.w600),

@@ -13,7 +13,7 @@ class MemoList extends StatelessWidget {
         ? ListView.builder(
             itemCount: memos.length,
             itemBuilder: (context, index) {
-              return MemoItem(memo: memos[index]);
+              return MemoItem(index: index, memo: memos[index]);
             },
           )
         : const Text("No memos Saved");

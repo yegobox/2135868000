@@ -5,11 +5,15 @@ import 'package:pocketbase/pocketbase.dart';
 
 class RemoteService {
   static final isarService = IsarService();
-  static final pb = PocketBase(dotenv.env["POCKETBASE_SERVER"]!);
+  static final pb = PocketBase(dotenv.env["POCKETBASE_SERVER"] != null
+      ? dotenv.env["POCKETBASE_SERVER"]!
+      : "");
 
   static void putInSync() {
-    pb.collection("memos").subscribe(
-        "*", (e) => isarService.saveMemo(Memo.fromRecord(e.record!)));
+    pb
+        .collection("memos")
+        .subscribe("*", (e) => isarService.saveMemo(Memo.fromRecord(e.record!)))
+        .catchError((error, stackTrace) {});
   }
 
   Future<List<RecordModel>> getMemos() {
@@ -17,12 +21,16 @@ class RemoteService {
   }
 
   Future<void> createMemo(Memo newMemo) async {
-    pb.collection("memos").create(body: newMemo.toJson());
+    pb
+        .collection("memos")
+        .create(body: newMemo.toJson())
+        .catchError((error, stackTrace) {});
   }
 
   Future<void> updateMemo(Memo updatedMemo) {
     return pb
         .collection("memos")
-        .update(updatedMemo.id!, body: updatedMemo.toJson());
+        .update(updatedMemo.id!, body: updatedMemo.toJson())
+        .catchError((error, stackTrace) {});
   }
 }
