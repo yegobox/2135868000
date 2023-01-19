@@ -16,7 +16,6 @@ class IsarService {
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open([MemoSchema], inspector: true);
     }
-    print(Isar.getInstance()!.directory);
     return Future.value(Isar.getInstance());
   }
 
